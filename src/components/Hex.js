@@ -9,41 +9,39 @@ import {Point, DisplayObject, utils} from 'pixi.js';
 import * as Textures  from '../textures/Hex'
 
 export default class Hex extends Component {
-    get x12(){
-    return 12;
-        // const {x} = this.props;
-        // return x * this.width;
+    constructor(props){
+        super(props);
     }
 
-    get y12(){
+    get x(){
+        const {x, y, padding} = this.props;
 
-        return 12;
-        const {y} = this.props;
-        return y * this.height;
+        if(y % 2)
+            return x * (this.width + padding);
+        return x * (this.width + padding) - this.width/2
     }
 
-    get width12(){
+    get y(){
+        const {y, padding} = this.props;
+        if(y === 0)
+            return y * (this.height + padding);
+        return y * (this.height + padding) - (this.height/4)*y;
+    }
 
-        return 12;
+    get width(){
         const {width, zoom} = this.props;
         return width/zoom;
     }
 
-    get height12(){
-
-        return 12;
-        const {height, zoom} = this.props;
+    get height(){
+        const {height, zoom, y} = this.props;
         return height/zoom;
     }
 
     render() {
-        const {width, height, zoom, texture} = this.props;
-        console.info(Textures)
-        console.info(Textures[texture])
-        console.info(width)
-        console.info(height);
+        const {texture} = this.props;
         return (
-           <Sprite texture={Textures[texture]} width={width/zoom} height={height/zoom} />
+           <Sprite texture={Textures[texture]} x={this.x} y={this.y} width={this.width} height={this.height} />
         )
     }
 }
@@ -54,14 +52,16 @@ Hex.PropTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
     texture: PropTypes.string,
-    zoom: PropTypes.number
+    zoom: PropTypes.number,
+    padding: PropTypes.number
 };
 
 Hex.defaultProps = {
-    zoom: 2,
-    width: 280,
+    zoom: 3,
+    width: 243,
     x: 0,
     y: 0,
-    height: 243,
+    height: 280,
+    padding: -2,
     texture: 'base'
 };
